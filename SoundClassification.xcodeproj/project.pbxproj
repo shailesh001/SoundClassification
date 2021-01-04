@@ -15,6 +15,7 @@
 		F21005B8259CCC3000820897 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F21005B6259CCC3000820897 /* LaunchScreen.storyboard */; };
 		F21005C3259CCC3000820897 /* SoundClassificationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21005C2259CCC3000820897 /* SoundClassificationTests.swift */; };
 		F21005CE259CCC3000820897 /* SoundClassificationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21005CD259CCC3000820897 /* SoundClassificationUITests.swift */; };
+		F21005DF259CCC4600820897 /* Animals.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21005DE259CCC4600820897 /* Animals.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		F21005C9259CCC3000820897 /* SoundClassificationUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SoundClassificationUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F21005CD259CCC3000820897 /* SoundClassificationUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundClassificationUITests.swift; sourceTree = "<group>"; };
 		F21005CF259CCC3000820897 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F21005DE259CCC4600820897 /* Animals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animals.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +108,7 @@
 				F21005B4259CCC3000820897 /* Assets.xcassets */,
 				F21005B6259CCC3000820897 /* LaunchScreen.storyboard */,
 				F21005B9259CCC3000820897 /* Info.plist */,
+				F21005DE259CCC4600820897 /* Animals.swift */,
 			);
 			path = SoundClassification;
 			sourceTree = "<group>";
@@ -259,6 +262,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F21005B0259CCC3000820897 /* ViewController.swift in Sources */,
+				F21005DF259CCC4600820897 /* Animals.swift in Sources */,
 				F21005AC259CCC3000820897 /* AppDelegate.swift in Sources */,
 				F21005AE259CCC3000820897 /* SceneDelegate.swift in Sources */,
 			);
