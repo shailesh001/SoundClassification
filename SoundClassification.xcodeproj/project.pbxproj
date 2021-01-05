@@ -16,6 +16,8 @@
 		F21005C3259CCC3000820897 /* SoundClassificationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21005C2259CCC3000820897 /* SoundClassificationTests.swift */; };
 		F21005CE259CCC3000820897 /* SoundClassificationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21005CD259CCC3000820897 /* SoundClassificationUITests.swift */; };
 		F21005DF259CCC4600820897 /* Animals.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21005DE259CCC4600820897 /* Animals.swift */; };
+		F2429DAD25A489450012A6A9 /* Audio.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2429DAC25A489450012A6A9 /* Audio.swift */; };
+		F24E906725A37563004CB7A1 /* SoundClassifier1.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = F24E906625A37563004CB7A1 /* SoundClassifier1.mlmodel */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +53,8 @@
 		F21005CD259CCC3000820897 /* SoundClassificationUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundClassificationUITests.swift; sourceTree = "<group>"; };
 		F21005CF259CCC3000820897 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F21005DE259CCC4600820897 /* Animals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animals.swift; sourceTree = "<group>"; };
+		F2429DAC25A489450012A6A9 /* Audio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Audio.swift; sourceTree = "<group>"; };
+		F24E906625A37563004CB7A1 /* SoundClassifier1.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = SoundClassifier1.mlmodel; path = "../../CreateML Models/SoundClassifier1.mlmodel"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,9 +105,11 @@
 		F21005AA259CCC3000820897 /* SoundClassification */ = {
 			isa = PBXGroup;
 			children = (
+				F24E906625A37563004CB7A1 /* SoundClassifier1.mlmodel */,
 				F21005AB259CCC3000820897 /* AppDelegate.swift */,
 				F21005AD259CCC3000820897 /* SceneDelegate.swift */,
 				F21005AF259CCC3000820897 /* ViewController.swift */,
+				F2429DAC25A489450012A6A9 /* Audio.swift */,
 				F21005B1259CCC3000820897 /* Main.storyboard */,
 				F21005B4259CCC3000820897 /* Assets.xcassets */,
 				F21005B6259CCC3000820897 /* LaunchScreen.storyboard */,
@@ -261,10 +267,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F2429DAD25A489450012A6A9 /* Audio.swift in Sources */,
 				F21005B0259CCC3000820897 /* ViewController.swift in Sources */,
 				F21005DF259CCC4600820897 /* Animals.swift in Sources */,
 				F21005AC259CCC3000820897 /* AppDelegate.swift in Sources */,
 				F21005AE259CCC3000820897 /* SceneDelegate.swift in Sources */,
+				F24E906725A37563004CB7A1 /* SoundClassifier1.mlmodel in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -7,6 +7,7 @@
 
 import UIKit
 import AVFoundation
+import SoundAnalysis
 
 class ViewController: UIViewController {
 
@@ -26,12 +27,19 @@ class ViewController: UIViewController {
         return directory.appendingPathComponent("recording.m4a")
     }()
     
+    private let classifier = AudioClassifier(model: SoundClassifier1().model)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         collectionView.dataSource = self
     }
 
+    private func refresh(clear: Bool = false) {
+        if clear { classification = nil }
+        collectionView.reloadData()
+    }
+    
     @IBAction func recordButtonPressed(_ sender: Any) {
         recordAudio()
     }
@@ -39,8 +47,10 @@ class ViewController: UIViewController {
     private func recordAudio() {
         guard let audioRecorder = audioRecorder else { return }
         
-        classification = nil
-        collectionView.reloadData()
+        refresh(clear: true)
+        
+        //classification = nil
+        //collectionView.reloadData()
         
         recordButton.changeState(to: .inProgress(title: "Recording...", color: .systemRed))
         progressBar.isHidden = false
@@ -55,11 +65,12 @@ class ViewController: UIViewController {
         progressBar.isHidden = true
         progressBar.progress = 0
         
-        if success, let audioFile = try? AVAudioFile(forReading: recordedAudioFilename) {
+        //if success, let audioFile = try? AVAudioFile(forReading: recordedAudioFilename) {
+        if success {
             recordButton.changeState(to: .disabled(title: "Record Sound", color: .systemGray))
-            classifySound(file: audioFile)
+            classifySound(file: recordedAudioFilename)
         } else {
-            summonAlertView()
+            // summonAlertView()
             classify(nil)
         }
     }
@@ -67,11 +78,20 @@ class ViewController: UIViewController {
     private func classify(_ animal: Animal?) {
         classification = animal
         recordButton.changeState(to: .enabled(title: "Record Sound", color: .systemBlue))
-        collectionView.reloadData()
+        //collectionView.reloadData()
+        refresh()
+        
+        if classification == nil {
+            summonAlertView()
+        }
     }
     
-    private func classifySound(file: AVAudioFile) {
-        classify(Animal.allCases.randomElement()!)
+    private func classifySound(file: URL) {
+        //classify(Animal.allCases.randomElement()!)
+        classifier?.classify(audioFile: file) { result in
+            self.classify(Animal(rawValue: result ?? ""))
+            
+        }
     }
 }
 
