@@ -43,15 +43,30 @@ class ResultsObserver: NSObject, SNResultsObserving {
     }
 }
 
+
 class AudioClassifier {
     
     private let model: MLModel
     private let request: SNClassifySoundRequest
-    
+
+    /*
     init?(model: MLModel) {
         guard let request = try? SNClassifySoundRequest(mlModel: model) else { return nil }
         
         self.model = model
+        self.request = request
+    }
+    */
+    
+    init?() {
+        //let config = MLModelConfiguration()
+        guard let soundModel = try? SoundClassifier1(configuration: MLModelConfiguration()) else {
+            fatalError("Could not load model")
+        }
+        
+        guard let request = try? SNClassifySoundRequest(mlModel: soundModel.model) else { return nil }
+        
+        self.model = soundModel.model
         self.request = request
     }
     

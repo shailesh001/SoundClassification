@@ -15,22 +15,34 @@ class ViewController: UIViewController {
     @IBOutlet weak var progressBar: UIProgressView!
     @IBOutlet weak var recordButton: ThreeButtonState!
     
-    private var recordingLength: Double = 5.0
+    private var recordingLength: Double = 10.0
     private var classification: Animal?
+    private var recording: Bool = false
     
+    /*
     private lazy var audioRecorder: AVAudioRecorder? = {
         return initialiseAudioRecorder()
     }()
+    */
+    private var audioRecorder: AVAudioRecorder?
     
     private lazy var recordedAudioFilename: URL = {
+        //let directory = FileManager.default.temporaryDirectory
         let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        return directory.appendingPathComponent("recording.m4a")
+        var fileName: URL = directory.appendingPathComponent("recording.m4a")
+        //return directory.appendingPathComponent("recording.m4a")
+        print(fileName)
+        return fileName
     }()
     
-    private let classifier = AudioClassifier(model: SoundClassifier1().model)
+    //private let classifier = AudioClassifier(model: SoundClassifier1(configuration: MLModelConfiguration()).model)
+    private let classifier = AudioClassifier()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        progressBar.isHidden = true
+        progressBar.progress = 0
 
         collectionView.dataSource = self
     }
@@ -41,21 +53,29 @@ class ViewController: UIViewController {
     }
     
     @IBAction func recordButtonPressed(_ sender: Any) {
-        recordAudio()
+        if recording {
+            finishRecording()
+        } else {
+            recordAudio()
+        }
     }
     
     private func recordAudio() {
-        guard let audioRecorder = audioRecorder else { return }
+        // Initialise the AudioRecorder object
+        //guard let audioRecorder = audioRecorder else { return }
+        audioRecorder = initialiseAudioRecorder()
         
         refresh(clear: true)
         
         //classification = nil
         //collectionView.reloadData()
         
-        recordButton.changeState(to: .inProgress(title: "Recording...", color: .systemRed))
+        recordButton.changeState(to: .inProgress(title: "Recording/Stop...", color: .systemRed))
         progressBar.isHidden = false
         
-        audioRecorder.record(forDuration: TimeInterval(recordingLength))
+        recording = true
+        //audioRecorder?.record(forDuration: TimeInterval(recordingLength))
+        audioRecorder?.record()
         UIView.animate(withDuration: recordingLength) {
             self.progressBar.setProgress(Float(self.recordingLength), animated: true)
         }
@@ -64,9 +84,11 @@ class ViewController: UIViewController {
     private func finishRecording(success: Bool = true) {
         progressBar.isHidden = true
         progressBar.progress = 0
+        recording = false
         
         //if success, let audioFile = try? AVAudioFile(forReading: recordedAudioFilename) {
         if success {
+            audioRecorder?.stop()
             recordButton.changeState(to: .disabled(title: "Record Sound", color: .systemGray))
             classifySound(file: recordedAudioFilename)
         } else {
@@ -88,9 +110,10 @@ class ViewController: UIViewController {
     
     private func classifySound(file: URL) {
         //classify(Animal.allCases.randomElement()!)
-        classifier?.classify(audioFile: file) { result in
-            self.classify(Animal(rawValue: result ?? ""))
-            
+        classifier?.classify(audioFile: file)
+        {
+            result in self.classify(Animal(rawValue: result ?? ""))
+            //(result)->() in self.classify(Animal(rawValue: result ?? ""))
         }
     }
 }
@@ -106,7 +129,46 @@ extension ViewController {
 
 extension ViewController: AVAudioRecorderDelegate {
     func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
+        print("audioRecorderDidFinishingRecording")
+        //finishRecording(success: flag)
+    }
+    
+    func audioRecorderEncodeErrorDidOccur(_ recorder: AVAudioRecorder, error: Error?) {
+        print("Error during recording")
+    }
+    
+    private func initialiseAudioRecorder() -> AVAudioRecorder? {
+        let settings = [
+            AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
+            AVSampleRateKey: 44100,
+            AVNumberOfChannelsKey: 1,
+            AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
+        ]
+
+        var recorder: AVAudioRecorder?
+        
+        do {
+            recorder = try AVAudioRecorder(url: recordedAudioFilename, settings: settings)
+            recorder?.delegate = self
+            //implicitly called by .record() so not really required here
+            recorder?.prepareToRecord()
+        } catch {
+            print(error)
+            //finishRecording(success: false)
+        }
+        
+        return recorder
+    }
+}
+
+/*
+extension ViewController {
+    func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
         finishRecording(success: flag)
+    }
+    
+    func audioRecorderEncodeErrorDidOccur(_ recorder: AVAudioRecorder, error: Error?) {
+        print("Error during recording")
     }
     
     private func initialiseAudioRecorder() -> AVAudioRecorder? {
@@ -117,12 +179,19 @@ extension ViewController: AVAudioRecorderDelegate {
             AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
         ]
         
-        let recorder = try? AVAudioRecorder(url: recordedAudioFilename, settings: settings)
+        var recorder: AVAudioRecorder?
+        
+        do {
+            recorder = try AVAudioRecorder(url: recordedAudioFilename, settings: settings)
+        } catch {
+            print(error)
+        }
         
         recorder?.delegate = self
         return recorder
     }
 }
+ */
 
 extension ViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -155,9 +224,9 @@ class ThreeButtonState: UIButton {
             self.backgroundColor = color
             self.isEnabled = true
         case .inProgress(let title, let color):
-            self.setTitle(title, for: .disabled)
+            self.setTitle(title, for: .normal)
             self.backgroundColor = color
-            self.isEnabled = false
+            self.isEnabled = true
         case .disabled(let title, let color):
             self.setTitle(title, for: .disabled)
             self.backgroundColor = color
