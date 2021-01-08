@@ -35,6 +35,7 @@ class ViewController: UIViewController {
         return fileName
     }()
     
+    // The following line won't work as you can't catch exceptions
     //private let classifier = AudioClassifier(model: SoundClassifier1(configuration: MLModelConfiguration()).model)
     private let classifier = AudioClassifier()
     
